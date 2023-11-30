@@ -1,6 +1,4 @@
 import math
-from typing import Any
-from pytorch_lightning.utilities.types import STEP_OUTPUT
 
 import torch
 from torch import nn
@@ -32,6 +30,8 @@ class DiffusionModel(pl.LightningModule):
         self.sa1 = SAWrapper(256, 8)
         self.sa2 = SAWrapper(256, 4)
         self.sa3 = SAWrapper(128,8)
+
+        self.save_hyperparameters()
 
     def pos_encoding(self, t, channels, embed_size):
         inv_freq = 1.0/(

@@ -20,7 +20,7 @@ class DiffSet(Dataset):
         self.dataset_len = len(train_dataset.data)
 
         if dataset=="MNIST" or dataset=="Fashion":
-            pad = transform.Pad(2)
+            pad = transforms.Pad(2)
             data = pad(train_dataset.data)
             data = data.unsqueeze(3)
             self.depth = 1
