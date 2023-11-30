@@ -5,7 +5,6 @@ from torch import nn
 import pytorch_lightning as pl
 
 from modules import *
-
 class DiffusionModel(pl.LightningModule):
     def __init__(self, in_size, t_range, img_depth):
         super().__init__()
@@ -13,7 +12,7 @@ class DiffusionModel(pl.LightningModule):
         self.beta_large=0.02
         self.t_range= t_range
         self.in_size = in_size
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        # self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # Pre-defined 
         bilinear=True
@@ -36,7 +35,7 @@ class DiffusionModel(pl.LightningModule):
     def pos_encoding(self, t, channels, embed_size):
         inv_freq = 1.0/(
             10000 
-            ** (torch.arange(0, channels, 2, device=self.device)/float() / channels)
+            ** (torch.arange(0, channels, 2, device=self.device).float() / channels)
         )
         pos_enc_a = torch.sin(t.repeat(1, channels//2) * inv_freq)
         pos_enc_b = torch.cos(t.repeat(1, channels//2) * inv_freq)
@@ -48,7 +47,7 @@ class DiffusionModel(pl.LightningModule):
         x2 = self.down1(x1) + self.pos_encoding(t,128,16)
         x3 = self.down2(x2) + self.pos_encoding(t, 256, 8)
         x3 = self.sa1(x3)
-        x4 = self.down3(x3) + self.pos_encoding(t, 128,8)
+        x4 = self.down3(x3) + self.pos_encoding(t, 256,4)
         x4 = self.sa2(x4)
         x = self.up1(x4, x3) + self.pos_encoding(t, 128,8)
         x = self.sa3(x)
@@ -72,7 +71,7 @@ class DiffusionModel(pl.LightningModule):
     def get_loss(self, batch):
         # Randomly get the step number in each image in the
         # current batch
-        ts = torch.randint(0, self.t_range, [batch.shape[0]])
+        ts = torch.randint(0, self.t_range, [batch.shape[0]]).to(self.device)
         noise_imgs = []
 
         # Get rand with shape like batch shape
@@ -90,7 +89,7 @@ class DiffusionModel(pl.LightningModule):
             )
             
         # Stack it to make a matrix like input matrix
-        noise_imgs = torch.stack(noise_imgs, dim=0)
+        noise_imgs = torch.stack(noise_imgs, dim=0).to(self.device)
         e_hat = self.forward(noise_imgs, ts.unsqueeze(-1).type(torch.float))
         loss = nn.functional.mse_loss(
             e_hat.reshape(-1, self.in_size), epsilons.reshape(-1, self.in_size)
