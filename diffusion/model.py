@@ -5,6 +5,7 @@ from torch import nn
 import pytorch_lightning as pl
 
 from modules import *
+
 class DiffusionModel(pl.LightningModule):
     def __init__(self, in_size, t_range, img_depth):
         super().__init__()
