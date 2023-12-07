@@ -4,7 +4,7 @@ import torch
 from torch import nn
 import pytorch_lightning as pl
 
-from modules import *
+from diffusion.modules import *
 
 class DiffusionModel(pl.LightningModule):
     def __init__(self, in_size, t_range, img_depth):
@@ -101,7 +101,7 @@ class DiffusionModel(pl.LightningModule):
     def denoise_sample(self,x ,t):
         with torch.no_grad():
             if t>1:
-                z = torch.randn(x.shape)
+                z = torch.randn(x.shape, device=x.device)
             else:
                 z =0
             e_hat = self.forward(x, t.view(1,1).repeat(x.shape[0],1))

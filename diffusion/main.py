@@ -7,8 +7,9 @@ import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 import imageio
 
-from data import DiffSet
-from model import DiffusionModel
+from diffusion.data import DiffSet
+from diffusion.model import DiffusionModel
+from diffusion.opt.default_opt import Opt
 
 # VARIABLES
 diffusion_steps = 1000
@@ -24,5 +25,11 @@ last_checkpoint = None
 def main():
     raise NotImplementedError
 
+def test():
+    opt = Opt().parse_args()
+    print("Parsed Arguments:")
+    for arg_name, arg_value in vars(opt).items():
+        print(f"{arg_name}: {arg_value}")
+
 if __name__=="__main__":
-    main()
+    test()
