@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 from torchvision.datasets import MNIST, FashionMNIST, CIFAR10
+from torch.utils.data import DataLoader
 from torchvision import transforms
 
 class DiffSet(Dataset):
@@ -37,3 +38,21 @@ class DiffSet(Dataset):
     
     def __getitem__(self, item):
         return self.input_seq[item]
+    
+def get_dataloader(choice, batch_size):
+    """_summary_
+
+    Args:
+        choice (_type_): _description_
+    """
+    train_dataset = DiffSet(True, choice)
+    val_dataset = DiffSet(False, choice)
+
+    train_loader = DataLoader(train_dataset, batch_size = batch_size, num_workers=4, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size = batch_size, num_workers=4, shuffle=False)
+
+    info_dict ={
+        "depth": train_dataset.depth,
+        "size": train_dataset.size
+    }
+    return train_loader, val_loader, info_dict

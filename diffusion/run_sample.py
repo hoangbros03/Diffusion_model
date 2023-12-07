@@ -6,7 +6,7 @@ from pathlib import Path
 import torch
 
 from diffusion.model import DiffusionModel
-from diffusion.utils import check_and_create_dir
+from diffusion.utils.utils import check_and_create_dir
 
 # VARIABLES
 diffusion_steps = 1000

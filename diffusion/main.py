@@ -3,27 +3,22 @@ import sys
 
 import wandb
 import torch
-import pytorch_lightning as pl
-from torch.utils.data import DataLoader
 import imageio
 
-from diffusion.data import DiffSet
-from diffusion.model import DiffusionModel
 from diffusion.opt.default_opt import Opt
-
-# VARIABLES
-diffusion_steps = 1000
-dataset_choice="Fashion"
-max_epoch=10
-batch_size = 128
-load_model = False
-load_version_num=1
-
-pass_version = None
-last_checkpoint = None
+from diffusion.utils.utils import login_wandb, finish_wandb
+from diffusion.train import train
 
 def main():
-    raise NotImplementedError
+    opt = Opt().parse_args()
+    if bool(opt.wandb_key):
+        login_wandb(opt.wandb_key)
+    if opt.purpose == "train":
+        train(opt)
+    else:
+        raise ValueError("Not support your purpose yet!")
+    if bool(opt.wandb_key):
+        finish_wandb
 
 def test():
     opt = Opt().parse_args()
@@ -32,4 +27,4 @@ def test():
         print(f"{arg_name}: {arg_value}")
 
 if __name__=="__main__":
-    test()
+    main()
