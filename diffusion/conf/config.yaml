@@ -1,0 +1,7 @@
+defaults:
+  - device: gpu
+  - log: wandb
+  - model_conf: ddpm
+  - _self_
+
+purpose: train

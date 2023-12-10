@@ -1,0 +1,5 @@
+diffusion_steps: 1000
+dataset_choice: Fashion
+max_epochs: 10
+batch_size: 128
+model_path: False
