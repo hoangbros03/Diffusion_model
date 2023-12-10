@@ -5,7 +5,8 @@ import wandb
 import torch
 import imageio
 
-from diffusion.opt.default_opt import Opt
+# from diffusion.opt.default_opt import Opt
+from diffusion.opt.hydra_opt import Opt
 from diffusion.utils.utils import login_wandb, finish_wandb
 from diffusion.train import train
 
@@ -23,8 +24,11 @@ def main():
 def test():
     opt = Opt().parse_args()
     print("Parsed Arguments:")
-    for arg_name, arg_value in vars(opt).items():
-        print(f"{arg_name}: {arg_value}")
+    # for arg_name, arg_value in vars(opt).items():
+    #     print(f"{arg_name}: {arg_value}")
+    for key in list(opt.keys()):
+        print(f"{key}: {opt[key]}")
+    print(opt.log.wandb_key)
 
 if __name__=="__main__":
-    main()
+    test()
